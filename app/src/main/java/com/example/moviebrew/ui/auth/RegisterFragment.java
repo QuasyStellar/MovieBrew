@@ -47,11 +47,11 @@ public class RegisterFragment extends Fragment {
         String password = passwordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_fill_all_fields), Toast.LENGTH_SHORT).show();
             return;
         }
         if (password.length() < 6) {
-            Toast.makeText(getContext(), "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_password_min_length), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -59,11 +59,11 @@ public class RegisterFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
                         if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).navigateToMainContent(); // Navigate to main content
+                            ((MainActivity) getActivity()).navigateToMainContent();
                         }
                     }
                     else {
-                        Toast.makeText(getContext(), "Authentication failed: " + task.getException().getMessage(),
+                        Toast.makeText(getContext(), getString(R.string.toast_authentication_failed) + task.getException().getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
                 });

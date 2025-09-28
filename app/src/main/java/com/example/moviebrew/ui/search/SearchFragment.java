@@ -82,15 +82,16 @@ public class SearchFragment extends Fragment {
                     movieList.addAll(response.body().search);
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getContext(), "Фильмы не найдены", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.toast_movies_not_found), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_network_error) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
+

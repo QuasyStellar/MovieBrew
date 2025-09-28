@@ -35,7 +35,6 @@ public class MovieDetailFragment extends Fragment {
     private String imdbId;
 
     public MovieDetailFragment() {
-        // Required empty public constructor
     }
 
     public static MovieDetailFragment newInstance(String imdbId) {
@@ -70,7 +69,7 @@ public class MovieDetailFragment extends Fragment {
         if (imdbId != null) {
             fetchMovieDetails(imdbId);
         } else {
-            Toast.makeText(getContext(), "Movie ID not found.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_movie_id_not_found), Toast.LENGTH_SHORT).show();
         }
 
         return view;
@@ -89,9 +88,9 @@ public class MovieDetailFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null && response.body().response.equals("True")) {
                     MovieDetail movieDetail = response.body();
                     titleTextView.setText(movieDetail.title + " (" + movieDetail.year + ")");
-                    genreTextView.setText("Genre: " + movieDetail.genre);
-                    directorTextView.setText("Director: " + movieDetail.director);
-                    actorsTextView.setText("Actors: " + movieDetail.actors);
+                    genreTextView.setText(getString(R.string.movie_detail_genre) + movieDetail.genre);
+                    directorTextView.setText(getString(R.string.movie_detail_director) + movieDetail.director);
+                    actorsTextView.setText(getString(R.string.movie_detail_actors) + movieDetail.actors);
                     plotTextView.setText(movieDetail.plot);
 
                     Glide.with(getContext())
@@ -99,14 +98,14 @@ public class MovieDetailFragment extends Fragment {
                             .placeholder(R.drawable.ic_launcher_background)
                             .into(posterImageView);
                 } else {
-                    Toast.makeText(getContext(), "Failed to load movie details.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.toast_failed_to_load_movie_details), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieDetail> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_network_error_detail) + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

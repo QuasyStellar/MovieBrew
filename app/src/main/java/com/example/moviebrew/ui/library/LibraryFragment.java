@@ -39,7 +39,7 @@ public class LibraryFragment extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private Spinner sortSpinner;
-    private String currentSortOption = "По названию"; // Default sort option
+    private String currentSortOption = "По названию";
 
     @Nullable
     @Override
@@ -67,7 +67,6 @@ public class LibraryFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
             }
         });
 
@@ -91,7 +90,6 @@ public class LibraryFragment extends Fragment {
 
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            // Ensure databaseReference is initialized only once or reset if user changes
             if (databaseReference == null || !databaseReference.getParent().getKey().equals(userId)) {
                 databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("movies");
             }
@@ -99,7 +97,7 @@ public class LibraryFragment extends Fragment {
         } else {
             movieList.clear();
             adapter.notifyDataSetChanged();
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_user_not_logged_in), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -112,12 +110,12 @@ public class LibraryFragment extends Fragment {
                     Movie movie = movieSnapshot.getValue(Movie.class);
                     movieList.add(movie);
                 }
-                sortMovies(); // Sort after fetching
+                sortMovies();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to load library.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.toast_failed_to_load_library), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -132,9 +130,8 @@ public class LibraryFragment extends Fragment {
                 Collections.sort(movieList, (m1, m2) -> m1.title.compareToIgnoreCase(m2.title));
                 break;
             case "По году":
-                Collections.sort(movieList, (m1, m2) -> m2.year.compareTo(m1.year)); // Descending year
+                Collections.sort(movieList, (m1, m2) -> m2.year.compareTo(m1.year));
                 break;
-            // Add more sorting options here
         }
         adapter.notifyDataSetChanged();
     }

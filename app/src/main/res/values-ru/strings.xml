@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">MovieBrew</string>
+    <string-array name="sort_options_array">
+        <item>По названию</item>
+        <item>По году</item>
+    </string-array>
+    <string name="logout_button_text">Выйти</string>
+    <string name="remove_button_text">Удалить</string>
+    <string name="add_button_text">Добавить</string>
+    <string name="hint_email">Электронная почта</string>
+    <string name="hint_password">Пароль (мин. 6 символов)</string>
+    <string name="button_register_text">Зарегистрироваться</string>
+    <string name="button_go_to_login_text">Уже есть аккаунт? Войти</string>
+    <string name="hint_password_login">Пароль</string>
+    <string name="button_login_text">Войти</string>
+    <string name="button_go_to_register_text">Нет аккаунта? Зарегистрироваться</string>
+    <string name="hint_search_title">Введите название фильма...</string>
+    <string name="button_search_text">Поиск</string>
+    <string name="toast_fill_all_fields">Пожалуйста, заполните все поля</string>
+    <string name="toast_password_min_length">Пароль должен содержать не менее 6 символов</string>
+    <string name="toast_authentication_failed">Ошибка аутентификации: </string>
+    <string name="toast_authentication_failed_login">Ошибка аутентификации.</string>
+    <string name="toast_user_not_logged_in">Пользователь не вошел в систему</string>
+    <string name="toast_failed_to_load_library">Не удалось загрузить библиотеку.</string>
+    <string name="profile_not_logged_in">Не вошел в систему</string>
+    <string name="toast_logged_out_successfully">Выход выполнен успешно.</string>
+    <string name="toast_movies_not_found">Фильмы не найдены</string>
+    <string name="toast_network_error">Ошибка сети: </string>
+    <string name="toast_movie_added">Фильм добавлен</string>
+    <string name="toast_failed_to_add_movie">Не удалось добавить фильм</string>
+    <string name="toast_please_login">Пожалуйста, войдите в систему</string>
+    <string name="toast_movie_removed">Фильм удален</string>
+    <string name="toast_failed_to_remove_movie">Не удалось удалить фильм</string>
+    <string name="toast_movie_id_not_found">Идентификатор фильма не найден.</string>
+    <string name="movie_detail_genre">Жанр: </string>
+    <string name="movie_detail_director">Режиссер: </string>
+    <string name="movie_detail_actors">Актеры: </string>
+    <string name="toast_failed_to_load_movie_details">Не удалось загрузить информацию о фильме.</string>
+    <string name="toast_network_error_detail">Ошибка сети: </string>
+</resources>

@@ -50,7 +50,6 @@ public class MovieDetail {
     @SerializedName("Response")
     public String response;
 
-    // Required for Firebase Realtime Database (if we ever save full details)
     public MovieDetail() {
     }
 }

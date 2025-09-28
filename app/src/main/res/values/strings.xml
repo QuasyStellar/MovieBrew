@@ -4,4 +4,37 @@
         <item>По названию</item>
         <item>По году</item>
     </string-array>
+    <string name="logout_button_text">Logout</string>
+    <string name="remove_button_text">Удалить</string>
+    <string name="add_button_text">Добавить</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password (min. 6 characters)</string>
+    <string name="button_register_text">Register</string>
+    <string name="button_go_to_login_text">Already have an account? Login</string>
+    <string name="hint_password_login">Password</string>
+    <string name="button_login_text">Login</string>
+    <string name="button_go_to_register_text">No account yet? Register</string>
+    <string name="hint_search_title">Введите название фильма...</string>
+    <string name="button_search_text">Поиск</string>
+    <string name="toast_fill_all_fields">Please fill all fields</string>
+    <string name="toast_password_min_length">Password must be at least 6 characters</string>
+    <string name="toast_authentication_failed">Authentication failed: </string>
+    <string name="toast_authentication_failed_login">Authentication failed.</string>
+    <string name="toast_user_not_logged_in">User not logged in</string>
+    <string name="toast_failed_to_load_library">Failed to load library.</string>
+    <string name="profile_not_logged_in">Not logged in</string>
+    <string name="toast_logged_out_successfully">Logged out successfully.</string>
+    <string name="toast_movies_not_found">Фильмы не найдены</string>
+    <string name="toast_network_error">Ошибка сети: </string>
+    <string name="toast_movie_added">Фильм добавлен</string>
+    <string name="toast_failed_to_add_movie">Не удалось добавить фильм</string>
+    <string name="toast_please_login">Пожалуйста, войдите в систему</string>
+    <string name="toast_movie_removed">Фильм удален</string>
+    <string name="toast_failed_to_remove_movie">Не удалось удалить фильм</string>
+    <string name="toast_movie_id_not_found">Movie ID not found.</string>
+    <string name="movie_detail_genre">Genre: </string>
+    <string name="movie_detail_director">Director: </string>
+    <string name="movie_detail_actors">Actors: </string>
+    <string name="toast_failed_to_load_movie_details">Failed to load movie details.</string>
+    <string name="toast_network_error_detail">Network error: </string>
 </resources>

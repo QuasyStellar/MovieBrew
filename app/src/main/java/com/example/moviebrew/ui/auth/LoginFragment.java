@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
         String password = passwordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.toast_fill_all_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -55,17 +55,16 @@ public class LoginFragment extends Fragment {
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
                         if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).navigateToMainContent(); // Navigate to main content
+                            ((MainActivity) getActivity()).navigateToMainContent();
                         }
                     }
                     else {
-                        Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.toast_authentication_failed_login), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void navigateToRegister() {
-        // Sign out current user if any, to ensure a clean state for registration
         if (mAuth.getCurrentUser() != null) {
             mAuth.signOut();
         }

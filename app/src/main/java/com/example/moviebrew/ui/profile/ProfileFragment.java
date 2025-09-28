@@ -25,7 +25,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
 
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
     @Nullable
@@ -59,18 +58,17 @@ public class ProfileFragment extends Fragment {
             emailTextView.setText(currentUser.getEmail());
             logoutButton.setVisibility(View.VISIBLE);
         } else {
-            emailTextView.setText("Not logged in");
+            emailTextView.setText(getString(R.string.profile_not_logged_in));
             logoutButton.setVisibility(View.GONE);
         }
     }
 
     private void logoutUser() {
         mAuth.signOut();
-        Toast.makeText(getContext(), "Logged out successfully.", Toast.LENGTH_SHORT).show();
-        // Navigate back to login screen and hide bottom nav
+        Toast.makeText(getContext(), getString(R.string.toast_logged_out_successfully), Toast.LENGTH_SHORT).show();
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).hideBottomNavigation();
-            ((MainActivity) getActivity()).loadAuthFragment(new LoginFragment()); // Use loadAuthFragment
+            ((MainActivity) getActivity()).loadAuthFragment(new LoginFragment());
         }
     }
 }

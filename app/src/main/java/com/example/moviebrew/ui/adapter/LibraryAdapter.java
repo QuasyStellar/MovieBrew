@@ -61,15 +61,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
             if (currentUser != null) {
                 String userId = currentUser.getUid();
                 databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).removeValue()
-                        .addOnSuccessListener(aVoid -> Toast.makeText(context, "Фильм удален", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(context, "Не удалось удалить фильм", Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(aVoid -> Toast.makeText(context, context.getString(R.string.toast_movie_removed), Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.toast_failed_to_remove_movie), Toast.LENGTH_SHORT).show());
             }
         });
 
-        // Make the whole item clickable to view details
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
-                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID)); // Use loadAuthFragment
+                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
             }
         });
     }

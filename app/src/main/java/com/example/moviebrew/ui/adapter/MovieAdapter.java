@@ -61,17 +61,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             if (currentUser != null) {
                 String userId = currentUser.getUid();
                 databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).setValue(movie)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(context, "Фильм добавлен", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(context, "Не удалось добавить фильм", Toast.LENGTH_SHORT).show());
+                        .addOnSuccessListener(aVoid -> Toast.makeText(context, context.getString(R.string.toast_movie_added), Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.toast_failed_to_add_movie), Toast.LENGTH_SHORT).show());
             } else {
-                Toast.makeText(context, "Пожалуйста, войдите в систему", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getString(R.string.toast_please_login), Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Make the whole item clickable to view details
         holder.itemView.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
-                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID)); // Use loadAuthFragment
+                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
             }
         });
     }
