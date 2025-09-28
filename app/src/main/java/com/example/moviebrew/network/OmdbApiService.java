@@ -1,0 +1,13 @@
+package com.example.moviebrew.network;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
+public interface OmdbApiService {
+    @GET("/")
+    Call<MovieSearchResponse> searchMovies(
+        @Query("s") String title,
+        @Query("apikey") String apiKey
+    );
+}

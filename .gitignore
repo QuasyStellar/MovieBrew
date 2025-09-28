@@ -1,0 +1,37 @@
+# Android/IntelliJ
+.idea/
+*.iml
+*.hprof
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration
+local.properties
+.gradle.properties
+captures/
+externalNativeBuild/
+
+# Kotlin/Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Android Studio
+*.apk
+*.ap_
+*.aab
+*.keystore
+*.jks
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# JetBrains
+out/
+
