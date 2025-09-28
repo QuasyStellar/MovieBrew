@@ -12,6 +12,7 @@ build/
 local.properties
 .gradle.properties
 captures/
+google-services.json
 externalNativeBuild/
 
 # Kotlin/Java

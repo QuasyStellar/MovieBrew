@@ -17,4 +17,8 @@ public class Movie {
 
     @SerializedName("Poster")
     public String poster;
+
+    // Required for Firebase Realtime Database
+    public Movie() {
+    }
 }

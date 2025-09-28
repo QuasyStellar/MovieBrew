@@ -3,6 +3,7 @@ import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties()
@@ -43,6 +44,9 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    lint {
+        disable.add("PropertyEscape")
+    }
 }
 
 dependencies {
@@ -54,6 +58,12 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.glide)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

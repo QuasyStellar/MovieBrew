@@ -45,12 +45,13 @@
             tools:text="2023" />
 
         <Button
-            android:id="@+id/button_add_to_library"
+            android:id="@+id/button_remove_from_library"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Добавить"
+            android:text="Удалить"
+            android:textColor="@android:color/holo_red_dark"
             app:layout_constraintEnd_toEndOf="@+id/textView_title"
             app:layout_constraintTop_toBottomOf="@+id/textView_year" />
 

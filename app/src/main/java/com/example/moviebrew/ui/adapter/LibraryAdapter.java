@@ -22,14 +22,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder> {
 
     private List<Movie> movies;
     private Context context;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
 
-    public MovieAdapter(Context context, List<Movie> movies) {
+    public LibraryAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
         this.mAuth = FirebaseAuth.getInstance();
@@ -38,13 +38,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie, parent, false);
-        return new MovieViewHolder(view);
+    public LibraryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_library, parent, false);
+        return new LibraryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
         Movie movie = movies.get(position);
         holder.title.setText(movie.title);
         holder.year.setText(movie.year);
@@ -54,15 +54,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.poster);
 
-        holder.addButton.setOnClickListener(v -> {
+        holder.removeButton.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
                 String userId = currentUser.getUid();
-                databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).setValue(movie)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(context, "Фильм добавлен", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(context, "Не удалось добавить фильм", Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(context, "Пожалуйста, войдите в систему", Toast.LENGTH_SHORT).show();
+                databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).removeValue()
+                        .addOnSuccessListener(aVoid -> Toast.makeText(context, "Фильм удален", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(context, "Не удалось удалить фильм", Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -72,18 +70,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies == null ? 0 : movies.size();
     }
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    public static class LibraryViewHolder extends RecyclerView.ViewHolder {
         ImageView poster;
         TextView title;
         TextView year;
-        Button addButton;
+        Button removeButton;
 
-        public MovieViewHolder(@NonNull View itemView) {
+        public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
             poster = itemView.findViewById(R.id.imageView_poster);
             title = itemView.findViewById(R.id.textView_title);
             year = itemView.findViewById(R.id.textView_year);
-            addButton = itemView.findViewById(R.id.button_add_to_library);
+            removeButton = itemView.findViewById(R.id.button_remove_from_library);
         }
     }
 }
