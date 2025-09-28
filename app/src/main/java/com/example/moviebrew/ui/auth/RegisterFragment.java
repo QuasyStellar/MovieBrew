@@ -58,9 +58,11 @@ public class RegisterFragment extends Fragment {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
-                        ((MainActivity) getActivity()).showBottomNavigation(); // Show nav bar
-                        navigateToSearch();
-                    } else {
+                        if (getActivity() instanceof MainActivity) {
+                            ((MainActivity) getActivity()).navigateToMainContent(); // Navigate to main content
+                        }
+                    }
+                    else {
                         Toast.makeText(getContext(), "Authentication failed: " + task.getException().getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
@@ -68,14 +70,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private void navigateToLogin() {
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new LoginFragment())
-                .commit();
-    }
-
-    private void navigateToSearch() {
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new SearchFragment())
-                .commit();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).loadAuthFragment(new LoginFragment());
+        }
     }
 }

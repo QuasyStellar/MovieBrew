@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.moviebrew.MainActivity;
 import com.example.moviebrew.R;
 import com.example.moviebrew.network.Movie;
+import com.example.moviebrew.ui.detail.MovieDetailFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +63,13 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
                 databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).removeValue()
                         .addOnSuccessListener(aVoid -> Toast.makeText(context, "Фильм удален", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> Toast.makeText(context, "Не удалось удалить фильм", Toast.LENGTH_SHORT).show());
+            }
+        });
+
+        // Make the whole item clickable to view details
+        holder.itemView.setOnClickListener(v -> {
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID)); // Use loadAuthFragment
             }
         });
     }

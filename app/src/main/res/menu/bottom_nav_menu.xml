@@ -8,4 +8,8 @@
         android:id="@+id/navigation_library"
         android:icon="@android:drawable/ic_menu_gallery"
         android:title="Библиотека" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Профиль" />
 </menu>

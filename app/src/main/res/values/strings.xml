@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MovieBrew</string>
+    <string-array name="sort_options_array">
+        <item>По названию</item>
+        <item>По году</item>
+    </string-array>
 </resources>

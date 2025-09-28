@@ -10,4 +10,10 @@ public interface OmdbApiService {
         @Query("s") String title,
         @Query("apikey") String apiKey
     );
+
+    @GET("/")
+    Call<MovieDetail> getMovieDetails(
+        @Query("i") String imdbId,
+        @Query("apikey") String apiKey
+    );
 }

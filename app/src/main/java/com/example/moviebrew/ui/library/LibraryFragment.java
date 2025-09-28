@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LibraryFragment extends Fragment {
@@ -33,6 +38,8 @@ public class LibraryFragment extends Fragment {
     private List<Movie> movieList;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
+    private Spinner sortSpinner;
+    private String currentSortOption = "По названию"; // Default sort option
 
     @Nullable
     @Override
@@ -45,18 +52,55 @@ public class LibraryFragment extends Fragment {
         adapter = new LibraryAdapter(getContext(), movieList);
         recyclerView.setAdapter(adapter);
 
-        mAuth = FirebaseAuth.getInstance();
+        sortSpinner = view.findViewById(R.id.spinner_sort_options);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sort_options_array, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(spinnerAdapter);
+
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentSortOption = parent.getItemAtPosition(position).toString();
+                sortMovies();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+
+        updateLibraryUI();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLibraryUI();
+    }
+
+    public void updateLibraryUI() {
+        if (mAuth == null) {
+            mAuth = FirebaseAuth.getInstance();
+        }
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("movies");
+            // Ensure databaseReference is initialized only once or reset if user changes
+            if (databaseReference == null || !databaseReference.getParent().getKey().equals(userId)) {
+                databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId).child("movies");
+            }
             fetchLibraryMovies();
         } else {
+            movieList.clear();
+            adapter.notifyDataSetChanged();
             Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
         }
-
-        return view;
     }
 
     private void fetchLibraryMovies() {
@@ -68,7 +112,7 @@ public class LibraryFragment extends Fragment {
                     Movie movie = movieSnapshot.getValue(Movie.class);
                     movieList.add(movie);
                 }
-                adapter.notifyDataSetChanged();
+                sortMovies(); // Sort after fetching
             }
 
             @Override
@@ -76,5 +120,22 @@ public class LibraryFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to load library.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void sortMovies() {
+        if (movieList == null || movieList.isEmpty()) {
+            return;
+        }
+
+        switch (currentSortOption) {
+            case "По названию":
+                Collections.sort(movieList, (m1, m2) -> m1.title.compareToIgnoreCase(m2.title));
+                break;
+            case "По году":
+                Collections.sort(movieList, (m1, m2) -> m2.year.compareTo(m1.year)); // Descending year
+                break;
+            // Add more sorting options here
+        }
+        adapter.notifyDataSetChanged();
     }
 }
