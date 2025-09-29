@@ -3,6 +3,7 @@
     <string-array name="sort_options_array">
         <item>По названию</item>
         <item>По году</item>
+        <item>По рейтингу</item>
     </string-array>
     <string name="logout_button_text">Выйти</string>
     <string name="remove_button_text">Удалить</string>

@@ -8,6 +8,8 @@ public interface OmdbApiService {
     @GET("/")
     Call<MovieSearchResponse> searchMovies(
         @Query("s") String title,
+        @Query("y") String year,
+        @Query("type") String type,
         @Query("apikey") String apiKey
     );
 

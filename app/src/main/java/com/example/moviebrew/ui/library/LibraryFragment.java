@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +41,8 @@ public class LibraryFragment extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private Spinner sortSpinner;
-    private String currentSortOption = "По названию";
+    private String currentSortOption;
+    private TextView emptyLibraryTextView;
 
     @Nullable
     @Override
@@ -57,6 +60,10 @@ public class LibraryFragment extends Fragment {
                 R.array.sort_options_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(spinnerAdapter);
+
+        currentSortOption = getResources().getStringArray(R.array.sort_options_array)[0].toString();
+
+        emptyLibraryTextView = view.findViewById(R.id.textView_empty_library);
 
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -107,8 +114,20 @@ public class LibraryFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 movieList.clear();
                 for (DataSnapshot movieSnapshot : snapshot.getChildren()) {
+                    Log.d("LibraryFragment", "Movie snapshot: " + movieSnapshot.toString());
                     Movie movie = movieSnapshot.getValue(Movie.class);
-                    movieList.add(movie);
+                    if (movie != null) {
+                        movieList.add(movie);
+                    } else {
+                        Log.e("LibraryFragment", "Failed to deserialize movie: " + movieSnapshot.getKey());
+                    }
+                }
+                if (movieList.isEmpty()) {
+                    emptyLibraryTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyLibraryTextView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
                 sortMovies();
             }
@@ -121,7 +140,9 @@ public class LibraryFragment extends Fragment {
     }
 
     private void sortMovies() {
+        Log.d("LibraryFragment", "sortMovies() called. movieList size: " + movieList.size());
         if (movieList == null || movieList.isEmpty()) {
+            adapter.notifyDataSetChanged();
             return;
         }
 
@@ -131,6 +152,9 @@ public class LibraryFragment extends Fragment {
                 break;
             case "По году":
                 Collections.sort(movieList, (m1, m2) -> m2.year.compareTo(m1.year));
+                break;
+            case "По рейтингу":
+                Collections.sort(movieList, (m1, m2) -> Float.compare(m2.userRating, m1.userRating));
                 break;
         }
         adapter.notifyDataSetChanged();

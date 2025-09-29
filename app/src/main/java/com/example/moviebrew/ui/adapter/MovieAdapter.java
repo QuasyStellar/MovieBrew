@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
@@ -30,12 +31,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private Context context;
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
+    private List<String> libraryMovieIds = new ArrayList<>();
 
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
         this.mAuth = FirebaseAuth.getInstance();
         this.databaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    public void setLibraryMovieIds(List<String> libraryMovieIds) {
+        this.libraryMovieIds = libraryMovieIds;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -56,19 +63,43 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.poster);
 
-        holder.addButton.setOnClickListener(v -> {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                String userId = currentUser.getUid();
-                databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).setValue(movie)
-                        .addOnSuccessListener(aVoid -> Toast.makeText(context, context.getString(R.string.toast_movie_added), Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.toast_failed_to_add_movie), Toast.LENGTH_SHORT).show());
-            } else {
-                Toast.makeText(context, context.getString(R.string.toast_please_login), Toast.LENGTH_SHORT).show();
+        if (libraryMovieIds.contains(movie.imdbID)) {
+            holder.addButton.setText(R.string.remove_button_text);
+            holder.addButton.setEnabled(true);
+            holder.addButton.setOnClickListener(v -> {
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+                    databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).removeValue()
+                            .addOnSuccessListener(aVoid -> Toast.makeText(context, context.getString(R.string.toast_movie_removed), Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.toast_failed_to_remove_movie), Toast.LENGTH_SHORT).show());
+                } else {
+                    Toast.makeText(context, context.getString(R.string.toast_please_login), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            holder.addButton.setText(R.string.button_add_to_library);
+            holder.addButton.setEnabled(true);
+            holder.addButton.setOnClickListener(v -> {
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+                    databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).setValue(movie)
+                            .addOnSuccessListener(aVoid -> Toast.makeText(context, context.getString(R.string.toast_movie_added), Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> Toast.makeText(context, context.getString(R.string.toast_failed_to_add_movie), Toast.LENGTH_SHORT).show());
+                } else {
+                    Toast.makeText(context, context.getString(R.string.toast_please_login), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
             }
         });
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.detailsButton.setOnClickListener(v -> {
             if (context instanceof MainActivity) {
                 ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
             }
@@ -85,6 +116,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         TextView title;
         TextView year;
         Button addButton;
+        Button detailsButton;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,7 +124,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             title = itemView.findViewById(R.id.textView_title);
             year = itemView.findViewById(R.id.textView_year);
             addButton = itemView.findViewById(R.id.button_add_to_library);
+            detailsButton = itemView.findViewById(R.id.button_details);
         }
     }
 }
-

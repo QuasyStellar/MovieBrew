@@ -62,6 +62,34 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_detail_director"
             tools:text="Actors: Actor 1, Actor 2" />
 
+        <Button
+            android:id="@+id/button_add_to_library_detail"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/add_button_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_detail_poster" />
+
+        <Button
+            android:id="@+id/button_remove_from_library_detail"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/remove_button_text"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_add_to_library_detail" />
+
         <TextView
             android:id="@+id/textView_detail_plot"
             android:layout_width="0dp"
@@ -69,7 +97,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_detail_poster"
+            app:layout_constraintTop_toBottomOf="@+id/button_remove_from_library_detail"
             tools:text="Plot: A long description of the movie plot goes here." />
 
         <ProgressBar

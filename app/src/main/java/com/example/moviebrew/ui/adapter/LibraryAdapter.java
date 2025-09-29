@@ -2,10 +2,12 @@ package com.example.moviebrew.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,20 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.poster);
 
+        holder.userRating.setRating(movie.userRating);
+        holder.userRating.setClickable(true);
+        holder.userRating.setFocusable(true);
+
+        holder.userRating.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            if (fromUser) {
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null) {
+                    String userId = currentUser.getUid();
+                    databaseReference.child("users").child(userId).child("movies").child(movie.imdbID).child("userRating").setValue(rating);
+                }
+            }
+        });
+
         holder.removeButton.setOnClickListener(v -> {
             FirebaseUser currentUser = mAuth.getCurrentUser();
             if (currentUser != null) {
@@ -71,6 +87,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
                 ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
             }
         });
+
+        holder.detailsButton.setOnClickListener(v -> openMovieDetails(movie));
+    }
+
+    private void openMovieDetails(Movie movie) {
+        if (context instanceof MainActivity) {
+            ((MainActivity) context).loadAuthFragment(MovieDetailFragment.newInstance(movie.imdbID));
+        }
     }
 
     @Override
@@ -83,6 +107,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         TextView title;
         TextView year;
         Button removeButton;
+        Button detailsButton;
+        RatingBar userRating;
 
         public LibraryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,6 +116,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
             title = itemView.findViewById(R.id.textView_title);
             year = itemView.findViewById(R.id.textView_year);
             removeButton = itemView.findViewById(R.id.button_remove_from_library);
+            detailsButton = itemView.findViewById(R.id.button_details);
+            userRating = itemView.findViewById(R.id.ratingBar_user_rating);
         }
     }
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/navigation_recommendations"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="Рекомендации" />
+    <item
         android:id="@+id/navigation_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="Поиск" />

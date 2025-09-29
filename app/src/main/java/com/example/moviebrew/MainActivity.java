@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.moviebrew.ui.auth.LoginFragment;
 import com.example.moviebrew.ui.library.LibraryFragment;
 import com.example.moviebrew.ui.profile.ProfileFragment;
+import com.example.moviebrew.ui.recommendations.RecommendationsFragment;
 import com.example.moviebrew.ui.search.SearchFragment;
 import com.example.moviebrew.ui.auth.RegisterFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private LoginFragment loginFragment;
     private RegisterFragment registerFragment;
+    private RecommendationsFragment recommendationsFragment;
 
     private Fragment activeFragment;
 
@@ -47,10 +49,8 @@ public class MainActivity extends AppCompatActivity {
             profileFragment = new ProfileFragment();
             loginFragment = new LoginFragment();
             registerFragment = new RegisterFragment();
+            recommendationsFragment = new RecommendationsFragment();
 
-            ft.add(R.id.fragment_container, searchFragment, SearchFragment.class.getName()).hide(searchFragment);
-            ft.add(R.id.fragment_container, libraryFragment, LibraryFragment.class.getName()).hide(libraryFragment);
-            ft.add(R.id.fragment_container, profileFragment, ProfileFragment.class.getName()).hide(profileFragment);
             ft.add(R.id.fragment_container, loginFragment, LoginFragment.class.getName()).hide(loginFragment);
             ft.add(R.id.fragment_container, registerFragment, RegisterFragment.class.getName()).hide(registerFragment);
 
@@ -61,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
                 activeFragment = loginFragment;
             } else {
                 showBottomNavigation();
-                ft.show(searchFragment);
-                activeFragment = searchFragment;
-                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+                ft.add(R.id.fragment_container, recommendationsFragment, RecommendationsFragment.class.getName());
+                activeFragment = recommendationsFragment;
+                bottomNavigationView.setSelectedItemId(R.id.navigation_recommendations);
             }
             ft.commit();
         } else {
@@ -73,11 +73,9 @@ public class MainActivity extends AppCompatActivity {
             profileFragment = (ProfileFragment) fm.findFragmentByTag(ProfileFragment.class.getName());
             loginFragment = (LoginFragment) fm.findFragmentByTag(LoginFragment.class.getName());
             registerFragment = (RegisterFragment) fm.findFragmentByTag(RegisterFragment.class.getName());
+            recommendationsFragment = (RecommendationsFragment) fm.findFragmentByTag(RecommendationsFragment.class.getName());
 
             FragmentTransaction ft = fm.beginTransaction();
-            if (searchFragment != null) ft.hide(searchFragment);
-            if (libraryFragment != null) ft.hide(libraryFragment);
-            if (profileFragment != null) ft.hide(profileFragment);
             if (loginFragment != null) ft.hide(loginFragment);
             if (registerFragment != null) ft.hide(registerFragment);
 
@@ -91,19 +89,20 @@ public class MainActivity extends AppCompatActivity {
                 ft.show(previouslyActiveFragment);
                 activeFragment = previouslyActiveFragment;
             } else {
-                ft.show(searchFragment);
-                activeFragment = searchFragment;
+                showBottomNavigation();
+                ft.show(recommendationsFragment);
+                activeFragment = recommendationsFragment;
+                bottomNavigationView.setSelectedItemId(R.id.navigation_recommendations);
             }
             ft.commit();
-            if (activeFragment == searchFragment) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_search);
-            }
         }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment targetFragment = null;
             int itemId = item.getItemId();
-            if (itemId == R.id.navigation_search) {
+            if (itemId == R.id.navigation_recommendations) {
+                targetFragment = recommendationsFragment;
+            } else if (itemId == R.id.navigation_search) {
                 targetFragment = searchFragment;
             } else if (itemId == R.id.navigation_library) {
                 targetFragment = libraryFragment;
@@ -157,23 +156,39 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        for (Fragment fragment : fm.getFragments()) {
-            ft.remove(fragment);
+        LoginFragment currentLoginFragment = (LoginFragment) fm.findFragmentByTag(LoginFragment.class.getName());
+        RegisterFragment currentRegisterFragment = (RegisterFragment) fm.findFragmentByTag(RegisterFragment.class.getName());
+        RecommendationsFragment currentRecommendationsFragment = (RecommendationsFragment) fm.findFragmentByTag(RecommendationsFragment.class.getName());
+
+        if (currentLoginFragment != null && currentLoginFragment.isAdded()) {
+            ft.remove(currentLoginFragment);
+        }
+        if (currentRegisterFragment != null && currentRegisterFragment.isAdded()) {
+            ft.remove(currentRegisterFragment);
         }
 
-        ft.add(R.id.fragment_container, searchFragment, SearchFragment.class.getName());
-        activeFragment = searchFragment;
+        if (currentRecommendationsFragment == null) {
+            currentRecommendationsFragment = new RecommendationsFragment();
+            ft.add(R.id.fragment_container, currentRecommendationsFragment, RecommendationsFragment.class.getName());
+        }
+
+        ft.replace(R.id.fragment_container, currentRecommendationsFragment, RecommendationsFragment.class.getName());
+        activeFragment = currentRecommendationsFragment;
         ft.commit();
 
         fm.executePendingTransactions();
 
-        if (profileFragment != null) {
-            profileFragment.updateProfileUI();
+        SearchFragment currentSearchFragment = (SearchFragment) fm.findFragmentByTag(SearchFragment.class.getName());
+        LibraryFragment currentLibraryFragment = (LibraryFragment) fm.findFragmentByTag(LibraryFragment.class.getName());
+        ProfileFragment currentProfileFragment = (ProfileFragment) fm.findFragmentByTag(ProfileFragment.class.getName());
+
+        if (currentProfileFragment != null) {
+            currentProfileFragment.updateProfileUI();
         }
-        if (libraryFragment != null) {
-            libraryFragment.updateLibraryUI();
+        if (currentLibraryFragment != null) {
+            currentLibraryFragment.updateLibraryUI();
         }
-        bottomNavigationView.setSelectedItemId(R.id.navigation_search);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_recommendations);
     }
 
     @Override

@@ -18,6 +18,8 @@ public class Movie {
     @SerializedName("Poster")
     public String poster;
 
+    public float userRating;
+
     public Movie() {
     }
 }
